@@ -61,7 +61,7 @@ class HttpExecute {
   }
 
   validateResponse(Response? response) {
-    return(response!.statusCode >= 200 && response.statusCode <=300)
+    return(response!.statusCode >= 200 && response!.statusCode <=300)
             ? response.body
             : Status(
                 type: SERVER_ERROR,
