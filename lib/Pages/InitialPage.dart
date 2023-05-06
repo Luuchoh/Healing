@@ -7,10 +7,9 @@ import 'package:healing/Widgets/TextBase.dart';
 class InitialPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
-        backgroundColor: Colors.black,
-        body: Container(
+    return Scaffold(
+      body: SafeArea(
+        child: Container(
           decoration: BoxDecoration(
             image: DecorationImage(
               image: AssetImage(
@@ -19,6 +18,7 @@ class InitialPage extends StatelessWidget {
               fit: BoxFit.fitWidth,
               opacity: .6
               ),
+            color: Colors.black
             ),
           height: double.infinity,
           child: Center(
@@ -57,6 +57,7 @@ class InitialPage extends StatelessWidget {
     );
   }
 
+  // redirection to Login
   goToLogin (BuildContext context) {
     return Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
   }

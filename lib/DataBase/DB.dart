@@ -6,7 +6,7 @@ import 'package:sqflite/sqflite.dart';
 
 class DB {
 
-  String name = 'CakeShop';
+  String name = 'Healing';
   int version = 1;
 
   Future<Database> open() async{
