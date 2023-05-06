@@ -23,7 +23,7 @@ class InitialPage extends StatelessWidget {
           height: double.infinity,
           child: Center(
             child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 Image.asset('assets/images/logo.png'),
@@ -32,7 +32,7 @@ class InitialPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ButtonBase("login", () => {}),
+                      ButtonBase("login", () => goToLogin(context)),
                       InkWell(
                         onTap: () {},
                         child: Padding(
