@@ -6,9 +6,16 @@ class ButtonBase extends StatelessWidget {
 
   String name;
   var onTap;
-  double width;
+  double width, letterSpacing, fontSize;
 
-  ButtonBase(this.name, this.onTap, {this.width = double.infinity});
+  ButtonBase(
+    this.name,
+    this.onTap,
+    {
+      this.width = double.infinity,
+      this.letterSpacing = 4,
+      this.fontSize = 16
+    });
 
   @override
   Widget build(BuildContext context) {
@@ -28,9 +35,9 @@ class ButtonBase extends StatelessWidget {
         child: Center(
           child: Text(
             name.toUpperCase(),
-            style: const TextStyle(
-              letterSpacing: 4,
-              fontSize: 16,
+            style: TextStyle(
+              letterSpacing: letterSpacing,
+              fontSize: fontSize,
               color: Colors.black,
               fontWeight: FontWeight.bold,
             ),
