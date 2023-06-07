@@ -73,7 +73,6 @@ class Count extends CRUD{
 
   Future<Count> verifyToken() async{
     Count count = this;
-    print('Token Invalido ${isInvalidAccessToken()}');
     if(isInvalidAccessToken()){
       var refreshCount = await refreshAccessToken();
       if(Validate.isNotStatus(refreshCount)) {
@@ -85,7 +84,6 @@ class Count extends CRUD{
 
   refreshAccessToken() async{
     var data = await EndPoint.refreshAccessToken(refreshToken);
-    print('Token Invalido $data');
     return Validate(data: data).checkIsStatusOrResponse(saveOrUpdate);
   }
 

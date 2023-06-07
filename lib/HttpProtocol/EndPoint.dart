@@ -10,17 +10,17 @@ class EndPoint {
       GRANT_TYPE: 'password',
       USERNAME: email,
       PASSWORD: password,
-      AUDIENCE: URL + API,
+      AUDIENCE: URL_AUTH0 + API,
       SCOPE: 'offline_access openid',
       CLIENT_ID: APP_ID,
       CLIENT_SECRET: APP_SECRET,
     };
 
-    return HttpExecute(endpoint: '/oauth/token', parameters: parameters).post();
+    return HttpExecute(URL_AUTH0, endpoint: '/oauth/token', parameters: parameters).post();
   }
 
   static getUser() {
-    return HttpExecute(endpoint: '/userinfo').get();
+    return HttpExecute(URL_AUTH0, endpoint: '/userinfo').get();
   }
 
   static refreshAccessToken(String refreshToken) {
@@ -31,6 +31,6 @@ class EndPoint {
       CLIENT_SECRET: APP_SECRET,
     };
 
-    return HttpExecute(endpoint: '/oauth/token', parameters: parameters, isRefresh: true).post();
+    return HttpExecute(URL_AUTH0, endpoint: '/oauth/token', parameters: parameters, isRefresh: true).post();
   }
 }

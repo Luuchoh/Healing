@@ -11,11 +11,13 @@ typedef VoidCallBackParam(var param);
 class HttpExecute {
 
   String endpoint;
+  String URL;
   var parameters;
+  var queryparams;
   Count? count;
   bool isRefresh;
 
-  HttpExecute({this.endpoint='', this.parameters, this.isRefresh = false});
+  HttpExecute(this.URL, {this.endpoint='', this.parameters, this.queryparams, this.isRefresh = false});
 
   post() async{
     return await checkConnection(executeMethod, 'post');
@@ -51,17 +53,18 @@ class HttpExecute {
         break;
       case 'get':
         response = await Client().get(
-            uri,
-            headers: header,
+          uri,
+          headers: header,
         );
-        print('respuesta get ${response.body}');
+        print(uri);
+        print(response.body);
         break;
     }
     return validateResponse(response);
   }
 
   validateResponse(Response? response) {
-    return(response!.statusCode >= 200 && response!.statusCode <=300)
+    return(response!.statusCode >= 200 && response!.statusCode <= 300)
             ? response.body
             : Status(
                 type: SERVER_ERROR,
@@ -71,7 +74,20 @@ class HttpExecute {
   }
   
   get uri {
-    return Uri.parse(URL + endpoint);
+    final basicURI = Uri.parse(URL + endpoint);
+    final finalURI = queryparams == null
+      ? Uri(
+        scheme: 'https',
+        host: basicURI.host,
+        path: basicURI.path,
+        )
+      : Uri(
+        scheme: 'https',
+        host: basicURI.host,
+        path: basicURI.path,
+        queryParameters: queryparams
+        );
+    return finalURI;
   }
 
   Map<String, String>? get header {

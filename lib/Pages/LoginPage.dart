@@ -51,7 +51,7 @@ class LoginPage extends StatelessWidget{
                               margin: EdgeInsets.only(bottom: 45),
                               child: TextBase('Bienvenido a Healing', size: 20, weight: FontWeight.bold,),
                             ),
-                            TextFormFieldBase('Usuario', Icons.person, controller: ctrlEmail, validator: validateEmail,),
+                            TextFormFieldBase('Usuario', Icons.person, controller: ctrlEmail, validator: validateEmail, keyboardType: TextInputType.emailAddress,),
                             TextFormFieldBase('Contraseña', Icons.remove_red_eye_rounded, obscureText: true, controller: ctrlPass, validator: validatePassword,),
                             Padding(
                               padding: EdgeInsets.all(30.0),
