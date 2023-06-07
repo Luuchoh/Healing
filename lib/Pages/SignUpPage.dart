@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:healing/Common/TransitionApp.dart';
+import 'package:healing/Common/Validate.dart';
+import 'package:healing/HttpProtocol/Status.dart';
 import 'package:healing/Model/Count.dart';
+import 'package:healing/Model/User.dart';
 import 'package:healing/Pages/LoginPage.dart';
 import 'package:healing/Widgets/BarHealing.dart';
 import 'package:healing/Widgets/ButtonBase.dart';
 import 'package:healing/Widgets/DropDownBase.dart';
 import 'package:healing/Widgets/ProgressDialog.dart';
+import 'package:healing/Widgets/SnackBarApp.dart';
 import 'package:healing/Widgets/TextBase.dart';
 import 'package:healing/Widgets/TextFormFieldBase.dart';
 
@@ -25,7 +29,7 @@ class SignUpPageState extends State<SignUpPage> {
 
   @override
   void initState() {
-    dropdownValue = list.first ;
+    dropdownValue = list.first;
   }
 
   @override
@@ -135,16 +139,42 @@ class SignUpPageState extends State<SignUpPage> {
     );
   }
 
-
-  signUp(BuildContext context) async{
+  signUp(BuildContext context) async {
     if (formKey.currentState!.validate()) {
+      showProgress(context);
+      var signup =
+          await Count().signUp(ctrlEmail.text, ctrlPass.text, ctrlName.text);
 
-      // showProgress(context);
-      await Count().signUp(ctrlEmail.text, ctrlPass.text, ctrlName.text);
-      print('sign up page');
-      print(ctrlEmail.text + ctrlPass.text + ctrlName.text);
+      if (Validate.isNotStatus(signup)) {
+
+        var count = await Count().login(ctrlEmail.text, ctrlPass.text);
+
+        if (Validate.isNotStatus(count)) {
+          var user = await User().getUserServer();
+
+          if (Validate.isNotStatus(user)) {
+            TransitionApp.closePageOrDialog(context);
+            TransitionApp.goMain(context, count: count, user: user);
+          } else
+            error(count, context);
+        } else
+          error(count, context);
+      } else
+        error(signup, context);
       // formKey.currentState!.reset();
     }
+  }
+
+  // Show Snack bar with error in validation login
+  error(Status status, BuildContext context) {
+    TransitionApp.closePageOrDialog(context);
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBarApp(Validate.isWrongEmailPassword(status.response)
+            ? TextBase(
+                "Usuario o Contraseña Incorrecto",
+                color: Colors.white,
+              )
+            : status.statusWidget));
   }
 
   // Show modal with a loader

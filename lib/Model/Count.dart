@@ -55,8 +55,7 @@ class Count extends CRUD{
 
   signUp(String email, String password, String name) async{
     var data = await EndPoint.signUp(email, password, name);
-    print("SIGN UP $data");
-    return Validate(data: data).checkIsStatusOrResponse(saveOrUpdate);
+    return data;
   }
 
   saveOrUpdate(data) async{
