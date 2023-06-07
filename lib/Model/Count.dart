@@ -53,6 +53,12 @@ class Count extends CRUD{
     return Validate(data: data).checkIsStatusOrResponse(saveOrUpdate);
   }
 
+  signUp(String email, String password, String name) async{
+    var data = await EndPoint.signUp(email, password, name);
+    print("SIGN UP $data");
+    return Validate(data: data).checkIsStatusOrResponse(saveOrUpdate);
+  }
+
   saveOrUpdate(data) async{
     Count count = addExpireTime(Count.toObject(data));
     count.id = (count.id > 0) ? await update(count.toMap()) : await insert(count.toMap());

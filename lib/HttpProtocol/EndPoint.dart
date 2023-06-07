@@ -19,6 +19,18 @@ class EndPoint {
     return HttpExecute(URL_AUTH0, endpoint: '/oauth/token', parameters: parameters).post();
   }
 
+  static signUp(String email, String password, String name){
+    Map parameters = {
+      CLIENT_ID: APP_ID,
+      EMAIL: email,
+      PASSWORD: password,
+      CONNECTION: NAME_CONNECTION,
+      NAME: name
+    };
+
+    return HttpExecute(URL_AUTH0, endpoint: '/dbconnections/signup', parameters: parameters).post();
+  }
+
   static getUser() {
     return HttpExecute(URL_AUTH0, endpoint: '/userinfo').get();
   }

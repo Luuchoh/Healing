@@ -102,7 +102,7 @@ class LoginPage extends StatelessWidget{
   // Perform Login
   login(BuildContext context) async{
     if (formKey.currentState!.validate()) {
-      formKey.currentState!.reset();
+      // formKey.currentState!.reset();
       showProgress(context);
       var count = await Count().login(ctrlEmail.text, ctrlPass.text);
 
