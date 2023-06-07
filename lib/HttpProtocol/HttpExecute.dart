@@ -72,7 +72,7 @@ class HttpExecute {
             : Status(
                 type: SERVER_ERROR,
                 response: response,
-                statusWidget: TextBase('Error en el servidor ' + response.statusCode.toString())
+                statusWidget: TextBase('Error en el servidor ' + response.reasonPhrase.toString())
               );
   }
   
