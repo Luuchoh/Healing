@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:healing/Bloc/Map/map_bloc.dart';
+import 'package:healing/Bloc/MyUbication/my_ubication_bloc.dart';
+
 import 'package:healing/Model/Count.dart';
 import 'package:healing/Model/User.dart';
 import 'package:healing/Pages/HomePage.dart';
@@ -53,8 +57,14 @@ class MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      home: getPage(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider<MyUbicationBloc>(create: (_) => MyUbicationBloc()),
+        BlocProvider<MapBloc>(create: (_) => MapBloc())
+      ],
+      child: MaterialApp(
+        home: getPage(),
+      ),      
     );
   }
 
@@ -63,6 +73,7 @@ class MyAppState extends State<MyApp> {
         ? LoadingPage()
         : (count != null && user != null)
         ? HomePage(user!, count!)
+        // ? MapPage()
         : InitialPage();
   }
 }
