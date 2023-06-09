@@ -23,7 +23,7 @@ abstract class CRUD {
     final db = await database;
     return await db.insert(table, data);
   }
-  delete(int id) async{
+  delete(String id) async{
     final db = await database;
     return await db.delete(table, where: 'id = ?', whereArgs: [id]) > 0 ;
   }

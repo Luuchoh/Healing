@@ -50,8 +50,6 @@ class HttpExecute {
           headers: header,
           body: parameters
         );
-        print(uri);
-        print(parameters);
         print(response.body);
         break;
       case 'get':

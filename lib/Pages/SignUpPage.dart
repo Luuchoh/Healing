@@ -141,11 +141,24 @@ class SignUpPageState extends State<SignUpPage> {
 
   signUp(BuildContext context) async {
     if (formKey.currentState!.validate()) {
-      showProgress(context);
+      // showProgress(context);
       var signup =
           await Count().signUp(ctrlEmail.text, ctrlPass.text, ctrlName.text);
 
       if (Validate.isNotStatus(signup)) {
+
+        // I create user for firebase
+        User? userFirebase;
+        userFirebase = User(
+          id: signup["_id"],
+          name: signup["name"],
+          email: signup["email"],
+          isOnline: 1,
+          isActive: 0,
+          lastTime: DateTime.now().millisecondsSinceEpoch.toString(),
+          rol: dropdownValue,
+        );
+        await userFirebase.save();
 
         var count = await Count().login(ctrlEmail.text, ctrlPass.text);
 

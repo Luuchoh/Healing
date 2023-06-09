@@ -12,7 +12,11 @@ import 'package:healing/Widgets/SnackBarApp.dart';
 import 'package:healing/Widgets/TextBase.dart';
 import 'package:healing/Widgets/TextFormFieldBase.dart';
 
-class LoginPage extends StatelessWidget{
+class LoginPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => LoginPageState();
+}
+class LoginPageState extends State<LoginPage>{
 
   GlobalKey<FormState> formKey = GlobalKey();
   TextEditingController ctrlEmail = TextEditingController();
