@@ -28,15 +28,20 @@ class User extends CRUD {
     this.rol = '',
   }):super(Tables.USER);
 
-  // User.toUser(var snap) {
-  //   id = snap.key;
-  //   userName = snap.value['userName'];
-  //   name = snap.value['name'];
-  //   email = snap.value['email'];
-  //   isOnline = snap.value['isOnline'];
-  //   lastTime = snap.value['lastTime'];
-  //   rol = snap.value['rol'];
-  // }
+  factory User.toObjectFB(var snap) {
+    return User(
+      id: snap.key,
+      userName: snap.value['userName'] == null ? '' : snap.value['userName'],
+      name: snap.value['name'],
+      email: snap.value['email'],
+      isOnline: snap.value['isOnline'],
+      isActive: snap.value['isActive'],
+      lastTime: snap.value['lastTime'],
+      rol: snap.value['rol']
+    );
+
+
+  }
 
   factory User.toObject(Map<String, Object?> data) {
     Validate validate = Validate(data: data);
@@ -65,11 +70,10 @@ class User extends CRUD {
     };
   }
 
-
   // firebase
   static getUserFirebase(String id) async {
-    DatabaseEvent event = await Firebase.tableUser.equalTo(id, key: 'id').once();
-    // return (event.snapshot.value != null) ? User.toUser(event.snapshot.value): null;
+    DatabaseEvent event = await Firebase.tableUser.child(id).once();
+    return (event.snapshot.value != null) ? User.toObjectFB(event.snapshot): null;
   }
 
   save() {

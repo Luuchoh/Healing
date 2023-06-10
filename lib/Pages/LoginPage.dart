@@ -112,10 +112,10 @@ class LoginPageState extends State<LoginPage>{
 
       if(Validate.isNotStatus(count)){
         var user = await User().getUserServer();
-
         if(Validate.isNotStatus(user)){
+          var userFirebase = await User.getUserFirebase(user.id);
           TransitionApp.closePageOrDialog(context);
-          TransitionApp.goMain(context, count: count, user: user);
+          TransitionApp.goMain(context, count: count, user: userFirebase);
         } else
           error(count, context);
       } else

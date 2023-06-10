@@ -5,7 +5,7 @@ import 'package:sqflite/sqflite.dart';
 abstract class CRUD {
 
   final String table;
-  const CRUD(this.table);
+  CRUD(this.table);
 
   Future<Database> get database async{
     return await DB().open();
