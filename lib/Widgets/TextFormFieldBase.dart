@@ -43,6 +43,7 @@ class TextFormFieldBase extends StatelessWidget {
         ],
       ),
       child: TextFormField(
+        focusNode: FocusNode(),
         controller: controller,
         obscureText: obscureText,
         keyboardType: keyboardType,

@@ -50,6 +50,7 @@ class HttpExecute {
           headers: header,
           body: parameters
         );
+        print(response.body);
         break;
       case 'get':
         response = await Client().get(
@@ -69,7 +70,7 @@ class HttpExecute {
             : Status(
                 type: SERVER_ERROR,
                 response: response,
-                statusWidget: TextBase('Error en el servidor ' + response.statusCode.toString())
+                statusWidget: TextBase('Error en el servidor ' + response.reasonPhrase.toString())
               );
   }
   

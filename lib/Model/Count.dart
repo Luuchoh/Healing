@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:healing/Common/Validate.dart';
 import 'package:healing/DataBase/CRUD.dart';
 import 'package:healing/DataBase/Tables.dart';
@@ -5,7 +7,7 @@ import 'package:healing/HttpProtocol/EndPoint.dart';
 
 class Count extends CRUD{
 
-  int id;
+  String id;
   String accessToken;
   String refreshToken;
   String createdAt;
@@ -14,7 +16,7 @@ class Count extends CRUD{
   String tokenType;
 
   Count({
-    this.id = 0,
+    this.id = '0',
     this.refreshToken = '',
     this.accessToken = '',
     this.createdAt = '',
@@ -26,7 +28,7 @@ class Count extends CRUD{
   factory Count.toObject(Map<String, Object?> data) {
     Validate validate = Validate(data: data);
     return Count(
-      id: validate.checkKeyExists(key: 'id', initialize: 0),
+      id: validate.checkKeyExists(key: 'id', initialize: '0'),
       accessToken: validate.checkKeyExists(key: 'access_token', initialize: ""),
       refreshToken: validate.checkKeyExists(key: 'refresh_token', initialize: ""),
       createdAt: validate.checkKeyExists(key: 'created_at', initialize: ""),
@@ -38,6 +40,7 @@ class Count extends CRUD{
 
   Map<String, dynamic> toMap() {
     return {
+    'id': id,
     'access_token': accessToken,
     'refresh_token': refreshToken,
     'created_at': createdAt,
@@ -49,13 +52,21 @@ class Count extends CRUD{
 
   login(String email, String password) async{
     var data = await EndPoint.login(email, password);
-    print("access $data");
     return Validate(data: data).checkIsStatusOrResponse(saveOrUpdate);
   }
 
+  signUp(String email, String password, String name) async{
+    var data = await EndPoint.signUp(email, password, name);
+    Map<String, dynamic> mapData = jsonDecode(data);
+    return mapData;
+  }
+
   saveOrUpdate(data) async{
+    var countLocalDB = [];
     Count count = addExpireTime(Count.toObject(data));
-    count.id = (count.id > 0) ? await update(count.toMap()) : await insert(count.toMap());
+    count.id = DateTime.now().millisecondsSinceEpoch.toString();
+    countLocalDB = await query('SELECT * FROM ${Tables.COUNT} WHERE id = ?', arguments: [count.id]);
+    (countLocalDB.length > 0) ? await update(count.toMap()) : await insert(count.toMap());
     return count;
   }
 

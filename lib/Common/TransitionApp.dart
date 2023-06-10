@@ -16,7 +16,7 @@ class TransitionApp {
   static goMain(BuildContext context, {Count? count, User? user}) {
     Navigator.pushAndRemoveUntil(
         context,
-        MaterialPageRoute(builder: (context) => MyApp()),
+        MaterialPageRoute(builder: (context) => MyApp(user: user,count: count,)),
         ModalRoute.withName("/MyApp")
     );
   }

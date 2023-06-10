@@ -15,5 +15,11 @@ const CLIENT_ID = 'client_id';
 const CLIENT_SECRET = 'client_secret';
 const REFRESH_TOKEN = 'refresh_token';
 
+const EMAIL = 'email';
+const CONNECTION = 'connection';
+const NAME_CONNECTION = 'Healing';
+const NAME = 'name';
+
+
 const URL_MAPBOX = "https://api.mapbox.com/directions/v5";
 const MAPBOX_ACCESS_TOKEN = "pk.eyJ1IjoibHV1Y2hvaCIsImEiOiJjbGhmZGV6cWUxdHhiM3NuMXhseG5hb2lqIn0.Ipg-QFIwr9H1d_UyauoJuA";

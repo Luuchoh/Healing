@@ -8,7 +8,7 @@ class Tables {
     "CREATE TABLE IF NOT EXISTS " +
         COUNT +
         "("
-            "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+            "id TEXT PRIMARY KEY,"
             "access_token TEXT,"
             "refresh_token TEXT,"
             "token_type TEXT,"
@@ -19,10 +19,14 @@ class Tables {
     "CREATE TABLE IF NOT EXISTS " +
         USER +
         "("
-            "id INTEGER PRIMARY KEY AUTOINCREMENT,"
+            "id TEXT PRIMARY KEY,"
             "email TEXT,"
             "username TEXT,"
-            "name TEXT"
+            "name TEXT,"
+            "isOnline INTEGER(1),"
+            "isActive INTEGER(1),"
+            "lastTime TEXT,"
+            "rol TEXT"
             ")"
   ];
 

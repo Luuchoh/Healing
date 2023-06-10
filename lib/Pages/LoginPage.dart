@@ -12,7 +12,11 @@ import 'package:healing/Widgets/SnackBarApp.dart';
 import 'package:healing/Widgets/TextBase.dart';
 import 'package:healing/Widgets/TextFormFieldBase.dart';
 
-class LoginPage extends StatelessWidget{
+class LoginPage extends StatefulWidget {
+  @override
+  State<StatefulWidget> createState() => LoginPageState();
+}
+class LoginPageState extends State<LoginPage>{
 
   GlobalKey<FormState> formKey = GlobalKey();
   TextEditingController ctrlEmail = TextEditingController();
@@ -102,16 +106,16 @@ class LoginPage extends StatelessWidget{
   // Perform Login
   login(BuildContext context) async{
     if (formKey.currentState!.validate()) {
-      formKey.currentState!.reset();
+      // formKey.currentState!.reset();
       showProgress(context);
       var count = await Count().login(ctrlEmail.text, ctrlPass.text);
 
       if(Validate.isNotStatus(count)){
         var user = await User().getUserServer();
-
         if(Validate.isNotStatus(user)){
+          var userFirebase = await User.getUserFirebase(user.id);
           TransitionApp.closePageOrDialog(context);
-          TransitionApp.goMain(context, count: count, user: user);
+          TransitionApp.goMain(context, count: count, user: userFirebase);
         } else
           error(count, context);
       } else

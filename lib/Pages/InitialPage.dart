@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:healing/Common/TransitionApp.dart';
 import 'package:healing/Pages/LoginPage.dart';
+import 'package:healing/Pages/SignUpPage.dart';
 import 'package:healing/Values/ColorsApp.dart';
 import 'package:healing/Widgets/ButtonBase.dart';
 import 'package:healing/Widgets/TextBase.dart';
@@ -34,7 +36,7 @@ class InitialPage extends StatelessWidget {
                     children: [
                       ButtonBase("login", () => goToLogin(context)),
                       InkWell(
-                        onTap: () {},
+                        onTap: () => goToSignUp(context),
                         child: Padding(
                           padding: EdgeInsets.symmetric(vertical: 12),
                           child: Row(
@@ -60,6 +62,11 @@ class InitialPage extends StatelessWidget {
   // redirection to Login
   goToLogin (BuildContext context) {
     return Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
+  }
+
+  // redirection to Sign Up
+  goToSignUp (BuildContext context) {
+    TransitionApp.openPage(context, SignUpPage());
   }
 
 }
