@@ -1,4 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:healing/Widgets/MoreInfo.dart';
+import 'package:healing/Widgets/Specialists.dart';
+import 'package:healing/Widgets/Specialties.dart';
+import 'package:healing/Widgets/TextFormFieldBase.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
 
@@ -9,7 +13,6 @@ import 'package:healing/Model/Count.dart';
 import 'package:healing/Model/User.dart';
 
 import 'package:healing/Pages/MapPage.dart';
-import 'package:healing/Widgets/TextBase.dart';
 import 'package:healing/Widgets/SnackBarApp.dart';
 
 import 'package:healing/Values/ColorsApp.dart';
@@ -42,14 +45,10 @@ class HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Healing"),
+        leading: Icon(
+          Icons.menu
+        ),
         actions: [
-          IconButton(
-            onPressed: () => closeSession(context),
-            icon: const Icon(
-              Icons.exit_to_app_rounded,
-              color: Colors.white,
-            ),
-          ),
           IconButton(
             onPressed: () => goToMap(context),
             icon: const Icon(
@@ -57,13 +56,38 @@ class HomePageState extends State<HomePage> {
               color: Colors.white,
             ),
           ),
+          IconButton(
+            onPressed: () => closeSession(context),
+            icon: const Icon(
+              Icons.exit_to_app_rounded,
+              color: Colors.white,
+            ),
+          ),
+
         ],
         centerTitle: true,
         backgroundColor: primaryColor,
       ),
-      backgroundColor: primaryColor,
       body: SafeArea(
-        child: TextBase('Bienvenidos a HEALING', color: Colors.white, size: 40,),
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 15, vertical: 20),
+            child: Center(
+              child: Column(
+                children: [
+                  MoreInfo(),
+                  Container(
+                    padding: EdgeInsets.symmetric(vertical: 25, horizontal: 12),
+                    child: TextFormFieldBase('Buscar...', Icons.search_outlined,),
+                  ),
+                  Specialties(),
+                  Specialists(),
+                  Specialists(),
+                ],
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
