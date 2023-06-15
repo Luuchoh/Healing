@@ -1,0 +1,64 @@
+import 'package:flutter/material.dart';
+import 'package:healing/Helpers/helpers.dart';
+import 'package:healing/Model/User.dart';
+import 'package:healing/Pages/MapPage.dart';
+import 'package:healing/Widgets/CardSpecialist.dart';
+import 'package:healing/Widgets/TextBase.dart';
+
+class Specialists extends StatelessWidget {
+  User user;
+  List<User> specialist;
+
+  Specialists(this.user, this.specialist);
+
+  // List specialist = [
+  //   {
+  //     'name': 'Luis Humberto Hernández Lavacude',
+  //     'imagen': Icons.family_restroom
+  //   },
+  //   {'name': 'Yammis Castañeda', 'imagen': Icons.medical_information_rounded},
+  // ];
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            margin: EdgeInsets.only(top: 50, bottom: 10),
+            child: TextBase(
+              'Especialistas',
+              align: TextAlign.start,
+              weight: FontWeight.bold,
+            ),
+          ),
+          SizedBox(
+            height: 115,
+            child: ListView.builder(
+                scrollDirection: Axis.horizontal,
+                itemCount: specialist.length,
+                itemBuilder: (context, index) {
+                  return buildItem(context, specialist[index]);
+                }),
+          )
+        ],
+      ),
+    );
+  }
+
+  buildItem(BuildContext context, User peer) {
+    return (peer == null || user.id == peer.id || peer.isActive == 0)
+        ? SizedBox.shrink()
+        : GestureDetector(
+            onTap: () {
+              goToMap(context, peer);
+            },
+            child: CardSpecialist(peer.name, ''),
+          );
+  }
+
+  goToMap (BuildContext context, User peer ) {
+    Navigator.pushReplacement(context, navegarMapaFadeIn(context, MapPage(peer)));
+  }
+}

@@ -6,6 +6,7 @@ import 'package:healing/Values/ColorsApp.dart';
 import 'package:healing/Widgets/ButtonBase.dart';
 import 'package:healing/Widgets/TextBase.dart';
 
+
 class InitialPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -34,7 +35,7 @@ class InitialPage extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      ButtonBase("login", () => goToLogin(context)),
+                      ButtonBase("iniciar sesión", () => goToLogin(context)),
                       InkWell(
                         onTap: () => goToSignUp(context),
                         child: Padding(
@@ -59,6 +60,8 @@ class InitialPage extends StatelessWidget {
     );
   }
 
+
+
   // redirection to Login
   goToLogin (BuildContext context) {
     return Navigator.push(context, MaterialPageRoute(builder: (context) => LoginPage()));
@@ -68,5 +71,6 @@ class InitialPage extends StatelessWidget {
   goToSignUp (BuildContext context) {
     TransitionApp.openPage(context, SignUpPage());
   }
+
 
 }

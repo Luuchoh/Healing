@@ -141,7 +141,7 @@ class SignUpPageState extends State<SignUpPage> {
 
   signUp(BuildContext context) async {
     if (formKey.currentState!.validate()) {
-      // showProgress(context);
+      showProgress(context);
       var signup =
           await Count().signUp(ctrlEmail.text, ctrlPass.text, ctrlName.text);
 
@@ -157,6 +157,8 @@ class SignUpPageState extends State<SignUpPage> {
           isActive: 0,
           lastTime: DateTime.now().millisecondsSinceEpoch.toString(),
           rol: dropdownValue,
+          latitude: 0.1,
+          longitude: 0.1,
         );
         await userFirebase.save();
 
@@ -166,7 +168,7 @@ class SignUpPageState extends State<SignUpPage> {
           var user = await User().getUserServer();
 
           if (Validate.isNotStatus(user)) {
-            var userFirebase = await User.getUserFirebase(user.id);
+            var userFirebase = await User().getUserFirebase(user.id);
             TransitionApp.closePageOrDialog(context);
             TransitionApp.goMain(context, count: count, user: userFirebase);
           } else
