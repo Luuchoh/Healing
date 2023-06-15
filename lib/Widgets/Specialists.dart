@@ -11,14 +11,6 @@ class Specialists extends StatelessWidget {
 
   Specialists(this.user, this.specialist);
 
-  // List specialist = [
-  //   {
-  //     'name': 'Luis Humberto Hernández Lavacude',
-  //     'imagen': Icons.family_restroom
-  //   },
-  //   {'name': 'Yammis Castañeda', 'imagen': Icons.medical_information_rounded},
-  // ];
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -52,13 +44,13 @@ class Specialists extends StatelessWidget {
         ? SizedBox.shrink()
         : GestureDetector(
             onTap: () {
-              goToMap(context, peer);
+              goToMap(context, peer, user);
             },
             child: CardSpecialist(peer.name, ''),
           );
   }
 
-  goToMap (BuildContext context, User peer ) {
-    Navigator.pushReplacement(context, navegarMapaFadeIn(context, MapPage(peer)));
+  goToMap (BuildContext context, User peer, User user ) {
+    Navigator.pushReplacement(context, navegarMapaFadeIn(context, MapPage(user, peer)));
   }
 }
