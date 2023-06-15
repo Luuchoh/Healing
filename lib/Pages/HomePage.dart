@@ -1,19 +1,19 @@
+import 'dart:async';
+
+import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
+import 'package:healing/DataBase/Firebase.dart';
+import 'package:healing/Widgets/ActivateServices.dart';
 import 'package:healing/Widgets/MoreInfo.dart';
 import 'package:healing/Widgets/Specialists.dart';
 import 'package:healing/Widgets/Specialties.dart';
 import 'package:healing/Widgets/TextFormFieldBase.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:geolocator/geolocator.dart';
 
-import 'package:healing/Helpers/helpers.dart';
 import 'package:healing/Common/TransitionApp.dart';
 import 'package:healing/Common/Validate.dart';
 import 'package:healing/Model/Count.dart';
 import 'package:healing/Model/User.dart';
-
-import 'package:healing/Pages/MapPage.dart';
-import 'package:healing/Widgets/SnackBarApp.dart';
 
 import 'package:healing/Values/ColorsApp.dart';
 
@@ -25,19 +25,54 @@ class HomePage extends StatefulWidget {
   HomePage(this.user, this.count);
 
   @override
-  State<StatefulWidget> createState() => HomePageState(user, count);
+  State createState() => HomePageState(user, count);
 
 }
-class HomePageState extends State<HomePage> {
+class HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   User user;
   Count count;
 
   HomePageState(this.user, this.count);
 
+  List<User> users = [];
+  StreamSubscription<DatabaseEvent>? onAddedSubs;
+  StreamSubscription<DatabaseEvent>? onChangeSubs;
+
   @override
   void initState() {
-    User().getUserServer();
+    onAddedSubs = Firebase.tableUser.orderByChild('rol').equalTo('Médico').onChildAdded.listen(onEntryAdded);
+    onChangeSubs = Firebase.tableUser.orderByChild('rol').equalTo('Médico').onChildAdded.listen(onEntryChanged);
+    updateOnline(1);
+    updateLocation();
+    WidgetsBinding.instance.addObserver(this);
+    super.initState();
+  }
+
+  onEntryAdded(DatabaseEvent event)async {
+    User newUser = User.toUser(event.snapshot);
+    if(mounted)
+      setState(() {
+        users.add(newUser);
+      });
+  }
+
+  onEntryChanged(DatabaseEvent event) async{
+    User oldEntry = users.singleWhere((entry) {
+      return entry.id == event.snapshot.key;
+    });
+    User newUser = User.toUser(event.snapshot);
+    if(mounted)
+      setState(() {
+        users[users.indexOf(oldEntry)] = newUser;
+      });
+  }
+
+  void dispose() {
+    onAddedSubs?.cancel();
+    onChangeSubs?.cancel();
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
   }
 
   @override
@@ -49,13 +84,6 @@ class HomePageState extends State<HomePage> {
           Icons.menu
         ),
         actions: [
-          IconButton(
-            onPressed: () => goToMap(context),
-            icon: const Icon(
-              Icons.map,
-              color: Colors.white,
-            ),
-          ),
           IconButton(
             onPressed: () => closeSession(context),
             icon: const Icon(
@@ -76,13 +104,13 @@ class HomePageState extends State<HomePage> {
               child: Column(
                 children: [
                   MoreInfo(),
+                  user.rol == 'Médico' ? ActivateServices(user) : SizedBox.shrink(),
                   Container(
                     padding: EdgeInsets.symmetric(vertical: 25, horizontal: 12),
                     child: TextFormFieldBase('Buscar...', Icons.search_outlined,),
                   ),
                   Specialties(),
-                  Specialists(),
-                  Specialists(),
+                  Specialists(user, users),
                 ],
               ),
             ),
@@ -92,29 +120,74 @@ class HomePageState extends State<HomePage> {
     );
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    super.didChangeAppLifecycleState(state);
+    switch(state) {
+      case AppLifecycleState.resumed:
+        updateOnline(1);
+        break;
+      case AppLifecycleState.paused:
+        updateOnline(0);
+        break;
+      default:
+        break;
+    }
+  }
+  updateLocation() async{
+    Position position = await getLocation();
+    user.latitude = position.latitude;
+    user.longitude = position.longitude;
+    user.updateLocation();
+  }
+  //Update isOnline user patient
+  updateOnline(int isOnline, {bool session = false}) {
+    if(user.rol == 'Paciente') {
+      user.isOnline = isOnline;
+      user.lastTime = DateTime.now().microsecondsSinceEpoch.toString();
+    } else if(user.rol == 'Médico' && session) {
+      user.isActive = isOnline;
+      user.isOnline = isOnline;
+      user.lastTime = DateTime.now().microsecondsSinceEpoch.toString();
+    }
+    user.updateIsActivate();
+  }
   // Delete count and user for the State
   closeSession(BuildContext context) async{
+    updateOnline(0, session: true);
     if(await Validate.deleteUserAndCount(count, user)) {
       TransitionApp.goMain(context);
     }
   }
-  // verify location permission is activated and redirect Map page
-  goToMap(BuildContext context) async{
-    final status = await Permission.location.request();
-    final gpsActive =  await Geolocator.isLocationServiceEnabled();
-    switch ( status ) {
-      case PermissionStatus.granted:
-        if(!gpsActive) {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBarApp(Text('Es necesario activar el GPS', style: TextStyle(color: Colors.white))));
-          break;
-        }
-        Navigator.pushReplacement(context, navegarMapaFadeIn(context, MapPage()));
-        break;
-      case PermissionStatus.denied:
-      case PermissionStatus.restricted:
-      case PermissionStatus.permanentlyDenied:
-        openAppSettings();
-        break;
+
+  Future<Position> getLocation() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    // Verifica si el servicio de ubicación está habilitado
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // El servicio de ubicación está deshabilitado, muestra un mensaje o realiza una acción
+      return Future.error('El servicio de ubicación está deshabilitado');
     }
+
+    // Solicita permiso para acceder a la ubicación
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.deniedForever) {
+      // El usuario ha negado permanentemente el permiso de ubicación, muestra un mensaje o realiza una acción
+      return Future.error('El permiso de ubicación está denegado');
+    }
+
+    if (permission == LocationPermission.denied) {
+      // El usuario ha negado el permiso de ubicación, solicita permiso
+      permission = await Geolocator.requestPermission();
+      if (permission != LocationPermission.whileInUse && permission != LocationPermission.always) {
+        // El usuario ha denegado el permiso de ubicación, muestra un mensaje o realiza una acción
+        return Future.error('El permiso de ubicación está denegado');
+      }
+    }
+
+    // Obtén la ubicación actual
+    return await Geolocator.getCurrentPosition();
   }
 }

@@ -6,6 +6,7 @@ import 'package:healing/Bloc/Map/map_bloc.dart';
 import 'package:healing/Bloc/MyUbication/my_ubication_bloc.dart';
 import 'package:healing/HttpProtocol/Navigation.dart';
 import 'package:healing/Model/TrafficResponse.dart';
+import 'package:healing/Model/User.dart';
 import 'package:healing/Widgets/ButtonBase.dart';
 import 'package:healing/Widgets/ButtonFollow.dart';
 import 'package:healing/Widgets/ButtonLocation.dart';
@@ -13,11 +14,21 @@ import 'package:healing/Widgets/ButtonMyRoute.dart';
 import 'package:healing/Widgets/ProgressDialog.dart';
 
 class MapPage extends StatefulWidget {
+
+  User peer;
+
+  MapPage(this.peer);
+
   @override
-  State<StatefulWidget> createState() => MapPageState();
+  State<StatefulWidget> createState() => MapPageState(peer);
 }
 
 class MapPageState extends State<MapPage>{
+
+  User peer;
+
+  MapPageState(this.peer);
+
   @override
   void initState() {
     BlocProvider.of<MyUbicationBloc>(context).startTracking();

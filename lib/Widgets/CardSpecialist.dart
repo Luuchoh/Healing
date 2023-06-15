@@ -4,10 +4,10 @@ import 'package:healing/Widgets/TextBase.dart';
 
 class CardSpecialist extends StatelessWidget {
 
-  IconData icon;
+  String Img;
   String speciality;
 
-  CardSpecialist(this.speciality, this.icon);
+  CardSpecialist(this.speciality, this.Img);
 
   @override
   Widget build(BuildContext context) {

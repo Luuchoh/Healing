@@ -26,7 +26,9 @@ class Tables {
             "isOnline INTEGER(1),"
             "isActive INTEGER(1),"
             "lastTime TEXT,"
-            "rol TEXT"
+            "rol TEXT,"
+            "latitude INTEGER,"
+            "longitude INTEGER"
             ")"
   ];
 
