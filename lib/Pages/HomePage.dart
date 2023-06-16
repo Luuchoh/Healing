@@ -41,15 +41,15 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
 
   @override
   void initState() {
-    onAddedSubs = Firebase.tableUser.orderByChild('rol').equalTo('Médico').onChildAdded.listen(onEntryAdded);
-    onChangeSubs = Firebase.tableUser.orderByChild('rol').equalTo('Médico').onChildAdded.listen(onEntryChanged);
+    onAddedSubs = Firebase.tableUser.onChildAdded.listen(onEntryAdded);
+    onChangeSubs = Firebase.tableUser.orderByChild('rol').equalTo('Médico').onChildChanged.listen(onEntryChanged);
     updateOnline(1);
     updateLocation();
     WidgetsBinding.instance.addObserver(this);
     super.initState();
   }
 
-  onEntryAdded(DatabaseEvent event)async {
+  onEntryAdded(DatabaseEvent event) async{
     User newUser = User.toUser(event.snapshot);
     if(mounted)
       setState(() {

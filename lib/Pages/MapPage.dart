@@ -94,7 +94,7 @@ class MapPageState extends State<MapPage>{
     PolylinePoints polylinePoints = PolylinePoints();
     final mapBloc =  BlocProvider.of<MapBloc>(context);
 
-    var polylineData = await Navigation.getRoute(state.ubication!, LatLng(peer.latitude, peer.longitude));
+    var polylineData = await Navigation.getRoute(state.ubication ?? LatLng(4.7037316, -74.2110208), LatLng(peer.latitude, peer.longitude));
     final trafficResponse = trafficResponseFromJson(polylineData);
 
     final geometry = trafficResponse.routes[0].geometry;

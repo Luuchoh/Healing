@@ -40,17 +40,20 @@ class Specialists extends StatelessWidget {
   }
 
   buildItem(BuildContext context, User peer) {
-    return (peer == null || user.id == peer.id || peer.isActive == 0)
+    return (peer == null || user.id == peer.id || peer.isActive == 0 || peer.rol == 'Paciente')
         ? SizedBox.shrink()
-        : GestureDetector(
+        : (user.rol != 'Médico')
+          ? GestureDetector(
             onTap: () {
               goToMap(context, peer, user);
             },
             child: CardSpecialist(peer.name, ''),
-          );
+          )
+          : CardSpecialist(peer.name, '');
   }
 
-  goToMap (BuildContext context, User peer, User user ) {
+  goToMap (BuildContext context, User peer, User user ) async{
+    // await peer.updateMapMedic(peer.id);
     Navigator.pushReplacement(context, navegarMapaFadeIn(context, MapPage(user, peer)));
   }
 }
