@@ -24,7 +24,7 @@ class ActivateServices extends StatelessWidget {
             ),
             Container(
               width: 80,
-              child: ButtonBase('Click', () => activateOrDesactive(user) , height: 30, fontSize: 10, letterSpacing: 2,),
+              child: ButtonBase(user.isActive == 0 ? 'activar' : 'desactivar', () => activateOrDesactive(user) , height: 30, fontSize: 10, letterSpacing: 2,),
             )
           ],
         ),

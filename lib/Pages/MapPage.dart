@@ -7,7 +7,7 @@ import 'package:healing/Bloc/MyUbication/my_ubication_bloc.dart';
 import 'package:healing/HttpProtocol/Navigation.dart';
 import 'package:healing/Model/TrafficResponse.dart';
 import 'package:healing/Model/User.dart';
-import 'package:healing/Widgets/ButtonBase.dart';
+import 'package:healing/Widgets/ButtonChat.dart';
 import 'package:healing/Widgets/ButtonFollow.dart';
 import 'package:healing/Widgets/ButtonLocation.dart';
 import 'package:healing/Widgets/ButtonMyRoute.dart';
@@ -15,19 +15,19 @@ import 'package:healing/Widgets/ProgressDialog.dart';
 
 class MapPage extends StatefulWidget {
 
-  User peer;
+  User user, peer;
 
-  MapPage(this.peer);
+  MapPage(this.user, this.peer);
 
   @override
-  State<StatefulWidget> createState() => MapPageState(peer);
+  State<StatefulWidget> createState() => MapPageState(user, peer);
 }
 
 class MapPageState extends State<MapPage>{
 
-  User peer;
+  User user, peer;
 
-  MapPageState(this.peer);
+  MapPageState(this.user, this.peer);
 
   @override
   void initState() {
@@ -52,19 +52,18 @@ class MapPageState extends State<MapPage>{
       floatingActionButton: Column(
         mainAxisAlignment: MainAxisAlignment.end,
         children: [
+          ButtonChat(user, peer),
           ButtonLocation(),
           ButtonFollow(),
           ButtonMyRoute(),
-          BlocBuilder<MyUbicationBloc, MyUbicationState>(
-            builder: (context, state) =>  ButtonBase("ruta", () => marcarTrayectoria(state)),
-          ),
-         
         ],
       ),
     );
   }
 
   Widget createMap(MyUbicationState state) {
+    marcarTrayectoria(state);
+
     if( !state.existsUbication ) return ProgressDialog();
 
     final mapBloc =  BlocProvider.of<MapBloc>(context);
@@ -95,7 +94,7 @@ class MapPageState extends State<MapPage>{
     PolylinePoints polylinePoints = PolylinePoints();
     final mapBloc =  BlocProvider.of<MapBloc>(context);
 
-    var polylineData = await Navigation.getRoute(state.ubication!, LatLng(4.712557, -74.11411));
+    var polylineData = await Navigation.getRoute(state.ubication ?? LatLng(4.7037316, -74.2110208), LatLng(peer.latitude, peer.longitude));
     final trafficResponse = trafficResponseFromJson(polylineData);
 
     final geometry = trafficResponse.routes[0].geometry;
