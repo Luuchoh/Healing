@@ -3,8 +3,11 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:healing/Common/Keys.dart';
 import 'package:healing/DataBase/Firebase.dart';
+import 'package:healing/Helpers/helpers.dart';
+import 'package:healing/Model/Count.dart';
 import 'package:healing/Model/MessageChat.dart';
 import 'package:healing/Model/User.dart';
+import 'package:healing/Pages/MapPage.dart';
 import 'package:healing/Widgets/ChatAppBar.dart';
 import 'package:healing/Widgets/ReceivedMessage.dart';
 import 'package:healing/Widgets/SentMessage.dart';
@@ -12,20 +15,22 @@ import 'package:healing/Widgets/StickerGridView.dart';
 import 'package:healing/Widgets/TextFieldChat.dart';
 
 class ChatPage extends StatefulWidget {
-  User? user;
-  User? peer;
+  User user;
+  User peer;
+  Count count;
 
-  ChatPage({this.user, this.peer}) : super(key: chatState);
+  ChatPage(this.user, this.peer, this.count) : super(key: chatState);
 
   @override
-  State createState() => ChatState(user!, peer!);
+  State createState() => ChatState(user, peer, count);
 }
 
 class ChatState extends State<ChatPage> {
   User user;
   User peer;
+  Count count;
 
-  ChatState(this.user, this.peer);
+  ChatState(this.user, this.peer, this.count);
 
   String groupChatId = "";
   int _limit = 20;
@@ -125,7 +130,8 @@ class ChatState extends State<ChatPage> {
       });
     } else {
       //user..chattingWith=null..updateChattingWith();
-      Navigator.pop(context);
+      Navigator.pushReplacement(context,
+          navegarMapaFadeIn(context, MapPage(user, peer, count)));
     }
 
     return Future.value(false);
