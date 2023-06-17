@@ -159,6 +159,8 @@ class SignUpPageState extends State<SignUpPage> {
           rol: dropdownValue,
           latitude: 0.1,
           longitude: 0.1,
+          viewMap: 0,
+          userPatient: '',
         );
         await userFirebase.save();
 

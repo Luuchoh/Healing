@@ -28,7 +28,9 @@ class Tables {
             "lastTime TEXT,"
             "rol TEXT,"
             "latitude INTEGER,"
-            "longitude INTEGER"
+            "longitude INTEGER,"
+            "viewMap INTEGER(1),"
+            "userPatient TEXT"
             ")"
   ];
 

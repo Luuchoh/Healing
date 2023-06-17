@@ -3,6 +3,8 @@ import 'dart:async';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter/material.dart';
 import 'package:healing/DataBase/Firebase.dart';
+import 'package:healing/Helpers/helpers.dart';
+import 'package:healing/Pages/MapPage.dart';
 import 'package:healing/Widgets/ActivateServices.dart';
 import 'package:healing/Widgets/MoreInfo.dart';
 import 'package:healing/Widgets/Specialists.dart';
@@ -45,8 +47,20 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
     onChangeSubs = Firebase.tableUser.orderByChild('rol').equalTo('Médico').onChildChanged.listen(onEntryChanged);
     updateOnline(1);
     updateLocation();
+    if(user.viewMap == 1) {
+      goToMapMedic(user.userPatient);
+    }
     WidgetsBinding.instance.addObserver(this);
     super.initState();
+  }
+
+  goToMapMedic(String id) async{
+    User peer = await User().getUserFirebase(id);
+    user.viewMap = 1;
+    user.userPatient = id;
+    if (peer.id != '0') {
+      Navigator.pushReplacement(context, navegarMapaFadeIn(context, MapPage(user, peer, count)));
+    }
   }
 
   onEntryAdded(DatabaseEvent event) async{
@@ -66,6 +80,9 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
       setState(() {
         users[users.indexOf(oldEntry)] = newUser;
       });
+    if(user.id == newUser.id && newUser.viewMap == 1){
+      goToMapMedic(newUser.userPatient);
+    }
   }
 
   void dispose() {
@@ -110,7 +127,7 @@ class HomePageState extends State<HomePage> with WidgetsBindingObserver {
                     child: TextFormFieldBase('Buscar...', Icons.search_outlined,),
                   ),
                   Specialties(),
-                  Specialists(user, users),
+                  Specialists(user, users, count),
                 ],
               ),
             ),

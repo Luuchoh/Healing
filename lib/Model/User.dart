@@ -20,6 +20,9 @@ class User extends CRUD {
   double latitude;
   double longitude;
 
+  int viewMap;
+  String userPatient;
+
   User({
     this.id = '0',
     this.userName = '',
@@ -31,6 +34,8 @@ class User extends CRUD {
     this.rol = '',
     this.latitude = 0.1,
     this.longitude = 0.1,
+    this.viewMap= 0,
+    this.userPatient = '',
   }):super(Tables.USER);
 
   static User toUser(var snap){
@@ -45,6 +50,8 @@ class User extends CRUD {
       rol: snap.value['rol'],
       latitude: snap.value['latitude'],
       longitude: snap.value['longitude'],
+      viewMap: snap.value['viewMap'],
+      userPatient: snap.value['userPatient'],
     );
   }
 
@@ -74,6 +81,8 @@ class User extends CRUD {
       lastTime: validate.checkKeyExists(key: 'lastTime', initialize: ""),
       latitude: validate.checkKeyExists(key: 'latitude', initialize: 0.1),
       longitude: validate.checkKeyExists(key: 'longitude', initialize: 0.1),
+      viewMap: validate.checkKeyExists(key: 'viewMap', initialize: 0),
+      userPatient: validate.checkKeyExists(key: 'userPatient', initialize: ""),
     );
   }
 
@@ -90,6 +99,8 @@ class User extends CRUD {
       lastTime: validate.checkKeyExists(key: 'lastTime', initialize: ""),
       latitude: validate.checkKeyExists(key: 'latitude', initialize: 0.1),
       longitude: validate.checkKeyExists(key: 'longitude', initialize: 0.1),
+      viewMap: validate.checkKeyExists(key: 'viewMap', initialize: 0),
+      userPatient: validate.checkKeyExists(key: 'userPatient', initialize: ""),
     );
   }
 
@@ -105,6 +116,8 @@ class User extends CRUD {
       "rol": rol,
       "latitude": latitude,
       "longitude": longitude,
+      "viewMap": viewMap,
+      "userPatient": userPatient,
     };
   }
 
@@ -113,6 +126,15 @@ class User extends CRUD {
     DatabaseEvent event = await Firebase.tableUser.child(id).once();
     if (event.snapshot.value != null) {
       saveOrUpdate(event.snapshot);
+      return User.toUser(event.snapshot);
+    } else {
+      return null;
+    }
+  }
+
+  getUserPatientFirebase(String id) async {
+    DatabaseEvent event = await Firebase.tableUser.child(id).once();
+    if (event.snapshot.value != null) {
       return User.toUser(event.snapshot);
     } else {
       return null;
@@ -128,7 +150,12 @@ class User extends CRUD {
   }
 
   updateLocation() {
+    print('entra');
     Firebase.tableUser.child(id).update({"latitude": latitude, "longitude": longitude});
+  }
+
+  updateMapMedic({required int stateMap, required String userPatient}) async{
+    await Firebase.tableUser.child(id).update({"viewMap": stateMap, "userPatient": userPatient});
   }
 
   //Auth0

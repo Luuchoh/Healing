@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart' show Colors;
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:healing/Values/ColorsApp.dart';
 import 'package:meta/meta.dart';
 
 import 'package:healing/Themes/PrimaryMapTheme.dart';
@@ -52,7 +53,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
   // polylines we route
   Polyline _weRoute = Polyline(
     polylineId: PolylineId('weRoute'),
-    color: Colors.white,
+    color: primaryColor,
     width: 4,
   );
 
@@ -89,7 +90,7 @@ class MapBloc extends Bloc<MapEvent, MapState> {
 
   _onDrawRoute(OnDrawRoute event) {
     if( !state.drawRoute ) {
-      _myRoute = _myRoute.copyWith(colorParam: Colors.white);
+      _myRoute = _myRoute.copyWith(colorParam: primaryColor);
     } else {
       _myRoute = _myRoute.copyWith(colorParam: Colors.transparent);
     }
